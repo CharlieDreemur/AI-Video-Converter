@@ -52,7 +52,6 @@ def pil_to_base64(pil_image):
 
 
 payload = {
-    "init_images": [pil_to_base64(pil_image)],#Plug converted Image to Payload
     "prompt": "best quality, masterpiece, 1girl",
     #"negative_prompt": "",
     "steps": 30,
