@@ -45,7 +45,7 @@
 	}
 </script>
 
-<form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit|preventDefault={submitVideoForm}>
+<form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-xl mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit|preventDefault={submitVideoForm}>
 	<div class="grid sm:grid-cols-2 justify-center text-center mt-8">
         <VideoUpload bind:file={videoData} />
         <div class="m-2 p-2 border-solid border-2 ring-offset-2 border-gray-500">
@@ -86,7 +86,7 @@
 		</select>
 	</label>
 
-    <input type="submit" value={submitting ? "Processing..." : "Upload"} class="self-center cursor-pointer" disabled={submitting}>
+    <input type="submit" value={submitting ? "Processing..." : "Generate"} class="self-center cursor-pointer" disabled={submitting}>
     {#if errorText != null}
     <p class="text-red-400">An error occurred: {errorText}</p>
     {/if}
