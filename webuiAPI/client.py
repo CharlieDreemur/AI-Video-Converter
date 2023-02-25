@@ -98,10 +98,6 @@ def img2img(image, payload):
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
         return image
-def instructImg2img(image):
-    ip2p = webuiapi.InstructPix2PixInterface(api)
-    r = ip2p.img2img(prompt='sunset', images=[image], text_cfg=7.5, image_cfg=1.5)
-    r.image
 
 def saveimg(path, img):
     if not os.path.exists(path):
@@ -111,5 +107,5 @@ def saveimg(path, img):
 
 if __name__ == '__main__':
     pil_image = Image.open("D:\StudyLife\Github\HackIllinois\webuiAPI\input\input.png")
-    image = instructImg2img(pil_image)
+    image = img2img(pil_image, payload=payload)
     saveimg('output', image)
