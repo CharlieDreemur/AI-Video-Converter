@@ -18,7 +18,7 @@
 
 <InputForm bind:videoSrc={clientVideoSrc} bind:responseText={serverResponse} />
 
-<div class="grid sm:grid-cols-2 justify-center text-center">
+<div class="grid sm:grid-cols-2 justify-center text-center mt-8">
 	<div>
 		<p>Input</p>
 		<VideoPlayer bind:srcURL={clientVideoSrc} />

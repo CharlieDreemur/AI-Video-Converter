@@ -2,10 +2,11 @@
     export let videoSrc = null; // bind
     export let responseText = null; // bind
     
+    import App from "../App.svelte";
     import { submitFormInBackground } from "./formSubmission.js";
     
 	const uploadURL = "/api/diffuse";
-	const samplingMethods = ["Euler a", "idk"]; // todo add
+	const samplingMethods = ["Euler a"]; // todo add
 	const models = ["protogenX34OfficialR_1.ckpt"]; // todo add
     let videoName = null;
 
@@ -23,12 +24,17 @@
 	}
 
     function submitVideoForm(e) {
+        submitting = true;
         submitFormInBackground(e)
             .then(res => {
+                submitting = false;
                 // send up
                 responseText = res.text();
             })
-            .catch(err => errorText = err);
+            .catch(err => {
+                submitting = false;
+                errorText = err;
+            });
     }
 
     // let clientPrompt = null; //#prompt bind:value={clientPrompt}
@@ -36,6 +42,7 @@
 
 	const promptPlaceholder = "Make it spicy"; // todo generate random prompt
     let errorText = null;
+    let submitting = false;
 </script>
 
 <form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit={submitVideoForm}>
@@ -69,7 +76,7 @@
 		</select>
 	</label>
 
-    <input type="submit" value="Upload" class="self-center cursor-pointer">
+    <input type="submit" value={submitting ? "Processing..." : "Upload"} class="self-center cursor-pointer" disabled={submitting}>
     {#if errorText != null}
     <p class="text-red">An error occurred: {errorText}</p>
     {/if}
