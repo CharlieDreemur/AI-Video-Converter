@@ -1,7 +1,7 @@
 <script>
 	// import('https://cdn.tailwindcss.com');
 
-	import VideoPlayer from "src/util/VideoPlayer.svelte";
+	import VideoPlayer from "./util/VideoPlayer.svelte";
 
 	let uploadURL = "/api/diffuse"; // todo
 	
@@ -16,17 +16,19 @@
 
 	function getPromptHint() {
 		// todo look at clientPrompt
-		return "hi";
+		if (clientPrompt == null || clientPrompt === "") {
+			return "Try adding some text.";
+		}
+		return null;
 	}
-
-	// $:
-	let promptHint = getPromptHint();
 	let clientPrompt = null;
+	
+	// $:
+	$: promptHint = clientPrompt == null ? "null" : "not null";//getPromptHint();
 </script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <h1>AIVideoConvertor</h1>
-<Test />
 <p>
 	Select a file to upload.
 </p>
@@ -41,7 +43,6 @@
 <div class="grid-cols-2">
 	<div>
 		<p>Input</p>
-		<p>{promptHint}</p>
 		<VideoPlayer srcURL={clientVideoSrc} />
 	</div>
 	<div>
