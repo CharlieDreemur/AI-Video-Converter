@@ -1,0 +1,52 @@
+import webuiapi
+import os
+import datetime
+# create API client
+api = webuiapi.WebUIApi()
+
+# create API client with custom host, port
+api = webuiapi.WebUIApi(host='127.0.0.1', port=7860)
+
+# create API client with custom host, port and https
+#api = webuiapi.WebUIApi(host='webui.example.com', port=443, use_https=True)
+
+# create API client with default sampler, steps.
+#api = webuiapi.WebUIApi(sampler='Euler a', steps=20)
+
+# optionally set username, password when --api-auth is set on webui.
+api.set_auth('username', 'password')
+
+def txt2img(path='output', prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
+    result = api.txt2img(prompt=prompt_in,
+                    negative_prompt="(bad quality), (worst quality)",
+                    seed=seed_in,
+                    styles=styles_in,
+                    cfg_scale=cfg_scale_in,
+                       sampler_index=sampler_index_in,
+                       steps=step_in,
+#                      enable_hr=True,
+#                      hr_scale=2,
+#                      hr_upscaler=webuiapi.HiResUpscaler.Latent,
+#                      hr_second_pass_steps=20,
+#                      hr_resize_x=1536,
+#                      hr_resize_y=1024,
+                       denoising_strength=denoising_strength_in,
+
+    )
+    output = result.image
+    saveimg(path, output)
+
+def img2img(image, path='output', prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
+    result = api.img2img(images=image, prompt=prompt_in, negative_prompt="(bad quality), (worst quality)", seed=seed_in, styles=styles_in, cfg_scale=cfg_scale_in, sampler_index=sampler_index_in, steps=step_in, denoising_strength=denoising_strength_in)
+    result.image
+    saveimg(path, result.image)
+
+
+def saveimg(path, img):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    now = datetime.datetime.now()
+    img.save(path+'/'+now.strftime('%Y%m%d%H%M%S%f')+'.png')
+
+if __name__ == '__main__':
+    #img2img(image='output.png')
