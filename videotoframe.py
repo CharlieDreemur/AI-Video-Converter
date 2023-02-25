@@ -30,7 +30,7 @@ def main(video_file,framepersec):
     # make a folder by the name of the video file
     if not os.path.isdir(filename):
         os.mkdir(filename)
-     # read the video file    
+    # read the video file    
     cap = cv2.VideoCapture(video_file)
     # get the FPS of the video
     fps = cap.get(cv2.CAP_PROP_FPS)
@@ -38,8 +38,9 @@ def main(video_file,framepersec):
     saving_frames_per_second = min(fps, SAVING_FRAMES_PER_SECOND)
     # get the list of duration spots to save
     saving_frames_durations = get_saving_frames_durations(cap, saving_frames_per_second)
-     # start the loop
+    # start the loop
     count = 0
+    temp=0
     while True:
         is_read, frame = cap.read()
         if not is_read:
@@ -57,7 +58,8 @@ def main(video_file,framepersec):
             # if closest duration is less than or equals the frame duration, 
             # then save the frame
             frame_duration_formatted = format_timedelta(timedelta(seconds=frame_duration))
-            cv2.imwrite(os.path.join(filename, f"frame{frame_duration_formatted}.jpg"), frame) 
+            cv2.imwrite(os.path.join(filename, f"frame{temp}.jpg"), frame) 
+            temp=temp+1
             # drop the duration spot from the list, since this duration spot is already saved
             try:
                 saving_frames_durations.pop(0)
@@ -68,4 +70,5 @@ def main(video_file,framepersec):
 if __name__ == "__main__":
     import sys
     video_file = sys.argv[1]
-    main(video_file)
+    framepersec= float(sys.argv[2])
+    main(video_file,framepersec)
