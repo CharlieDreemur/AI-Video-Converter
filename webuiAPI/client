@@ -1,6 +1,7 @@
 import webuiapi
 import os
 import datetime
+from PIL import Image
 # create API client
 api = webuiapi.WebUIApi()
 
@@ -16,7 +17,7 @@ api = webuiapi.WebUIApi(host='127.0.0.1', port=7860)
 # optionally set username, password when --api-auth is set on webui.
 api.set_auth('username', 'password')
 
-def txt2img(path='output', prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
+def txt2img(prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
     result = api.txt2img(prompt=prompt_in,
                     negative_prompt="(bad quality), (worst quality)",
                     seed=seed_in,
@@ -33,13 +34,11 @@ def txt2img(path='output', prompt_in="best quality, masterpiece, highly detailed
                        denoising_strength=denoising_strength_in,
 
     )
-    output = result.image
-    saveimg(path, output)
+    return result.image
 
-def img2img(image, path='output', prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
-    result = api.img2img(images=image, prompt=prompt_in, negative_prompt="(bad quality), (worst quality)", seed=seed_in, styles=styles_in, cfg_scale=cfg_scale_in, sampler_index=sampler_index_in, steps=step_in, denoising_strength=denoising_strength_in)
-    result.image
-    saveimg(path, result.image)
+def img2img(image, prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='DDIM',step_in=20, denoising_strength_in=0.75):
+    result = api.img2img(images=[image], prompt=prompt_in, negative_prompt="(bad quality), (worst quality)", seed=seed_in, styles=styles_in, cfg_scale=cfg_scale_in, sampler_index=sampler_index_in, steps=step_in, denoising_strength=denoising_strength_in)
+    return result.image
 
 
 def saveimg(path, img):
@@ -49,4 +48,7 @@ def saveimg(path, img):
     img.save(path+'/'+now.strftime('%Y%m%d%H%M%S%f')+'.png')
 
 if __name__ == '__main__':
-    #img2img(image='output.png')
+    path = 'output'
+    inputImage = Image.open('output/output.png')
+    output = img2img(inputImage)
+    saveimg(path, output)
