@@ -1,5 +1,6 @@
 <script>
     export let videoSrc = null; // bind
+    export let videoName = null; // bind
     export let responseText = null; // bind
     
     import App from "../App.svelte";
@@ -8,7 +9,6 @@
 	const uploadURL = "/api/diffuse";
 	const samplingMethods = ["Euler a"]; // todo add
 	const models = ["protogenX34OfficialR_1.ckpt"]; // todo add
-    let videoName = null;
 
 	function clientVideoUpdated(e) {
 		const file = e.target.files[0];
