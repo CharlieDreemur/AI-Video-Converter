@@ -7,8 +7,8 @@
 </script>
 
 <div>
-    Input
-    {#if srcURL != null}
+    {#if srcURL != null && srcURL != ""}
+    <!-- svelte-ignore a11y-media-has-caption -->
     <video controls>
         <source src={srcURL} type="video/{srcURL.slice(-srcURL.lastIndexOf('.'))}">
         Can't preview: Your browser doesn't support the video tag.
