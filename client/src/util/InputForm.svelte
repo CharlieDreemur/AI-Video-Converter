@@ -5,7 +5,7 @@
 
     const MAX_UPLOAD_SIZE_MB = 10;
     
-    import App from "../App.svelte";
+    import { getRandomAdjective } from "./randomAdjective.js";
     import { getFileExtension, submitFormInBackground } from "./formSubmission.js";
     
 	const uploadURL = "/api/diffuse";
@@ -50,10 +50,9 @@
     // let clientPrompt = null; //#prompt bind:value={clientPrompt}
 	//$: promptHint = clientPrompt.length < 8 ? "Add more details" : null;
 
-	const promptPlaceholder = "Make it spicy"; // todo generate random prompt
+	const promptPlaceholder = `Make it ${getRandomAdjective()}`;
     let errorText = null;
     let submitting = false;
-    $: console.log(errorText);
 </script>
 
 <form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit={submitVideoForm}>
