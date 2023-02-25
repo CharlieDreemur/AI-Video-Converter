@@ -2,9 +2,11 @@
     export let videoSrc = null; // bind
     export let videoName = null; // bind
     export let responseText = null; // bind
+
+    const MAX_UPLOAD_SIZE_MB = 10;
     
     import App from "../App.svelte";
-    import { submitFormInBackground } from "./formSubmission.js";
+    import { getFileExtension, submitFormInBackground } from "./formSubmission.js";
     
 	const uploadURL = "/api/diffuse";
 	const samplingMethods = ["Euler a"]; // todo add
@@ -12,7 +14,14 @@
 
 	function clientVideoUpdated(e) {
 		const file = e.target.files[0];
-		console.log(file);
+        const megaByteSize = file.size/Math.pow(10, 6);
+        if (getFileExtension(file.name) !== "mp4") {
+            errorText = `Files must be an mp4. (You uploaded a ${getFileExtension(file.name)})`;
+            return;
+        } else if (megaByteSize > MAX_UPLOAD_SIZE_MB) {
+            errorText = `Max file size is ${MAX_UPLOAD_SIZE_MB} MB. (Your file is ${MAX_UPLOAD_SIZE_MB} MB.)`;
+            return;
+        }
 		if (e == undefined) {
 			videoSrc = null;
 			videoName = null;
@@ -21,6 +30,7 @@
 			videoSrc = window.URL.createObjectURL(file);
 			videoName = file.name;
 		}
+        errorText = null;
 	}
 
     function submitVideoForm(e) {
@@ -33,7 +43,7 @@
             })
             .catch(err => {
                 submitting = false;
-                errorText = err;
+                errorText = err.message;
             });
     }
 
@@ -43,12 +53,13 @@
 	const promptPlaceholder = "Make it spicy"; // todo generate random prompt
     let errorText = null;
     let submitting = false;
+    $: console.log(errorText);
 </script>
 
 <form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit={submitVideoForm}>
 	<label for="video">
 		<span>Input video</span>
-		<input id="video" name="video" type="file" accept="video/*" on:change={clientVideoUpdated} required />
+		<input id="video" name="video" type="file" accept="video/mp4" on:change={clientVideoUpdated} required />
 	</label>
 	<!--<span>{promptHint}</span>-->
 	<label for="prompt">
@@ -78,7 +89,7 @@
 
     <input type="submit" value={submitting ? "Processing..." : "Upload"} class="self-center cursor-pointer" disabled={submitting}>
     {#if errorText != null}
-    <p class="text-red">An error occurred: {errorText}</p>
+    <p class="text-red-400">An error occurred: {errorText}</p>
     {/if}
 </form>
 
