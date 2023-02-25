@@ -50,7 +50,7 @@
 	</label>
 	<label for="model">
 		<span>Model</span>
-		<select>
+		<select id="model" name="model">
 			{#each models as op}
 				<option value={op}>
 					{op}
@@ -60,7 +60,7 @@
 	</label>
 	<label>
 		<span>Sampling method</span>
-		<select>
+		<select id="samplingMethod" name="samplingMethod">
 			{#each samplingMethods as op}
 				<option value={op}>
 					{op}
