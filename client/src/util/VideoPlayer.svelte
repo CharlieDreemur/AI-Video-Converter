@@ -1,5 +1,6 @@
 <script>
-	export let srcURL;
+	export let srcURL; // bind
+
 	// export let clientVideoWidth;
 	// export let clientVideoHeight;
     // width={clientVideoHeight} height={clientVideoWidth}
@@ -7,12 +8,12 @@
 </script>
 
 <div>
-    Input
-    {#if srcURL != null}
+    {#if srcURL != null && srcURL != ""}
+    <!-- svelte-ignore a11y-media-has-caption -->
     <video controls>
         <source src={srcURL} type="video/{srcURL.slice(-srcURL.lastIndexOf('.'))}">
         Can't preview: Your browser doesn't support the video tag.
     </video>
-    <i class="fa fa-trash"></i>
+    <i class="fa fa-trash cursor-pointer" on:click={() => srcURL = null}></i>
     {/if}
 </div>
