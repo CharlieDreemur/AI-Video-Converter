@@ -8,6 +8,8 @@ import logging
 import compress
 import webuiAPI.setting
 
+MAX_FPS = 60
+
 def format_timedelta(td):
     """Utility function to format timedelta objects in a cool way (e.g 00:00:20.05) 
     omitting microseconds and retaining milliseconds"""
@@ -78,6 +80,10 @@ def video2frame(video_file,framepersec=60):
         count += 1
     return filename
 
+def interpolation(fps):
+    pass
+
+
 '''def frame2video(pathIn,pathOut,fps):
     logging.info(f"pathIn: {pathIn}")
     logging.info(f"pathOut: {pathOut}")
@@ -106,7 +112,7 @@ def convert_frames_to_video(pathIn,pathOut,fps):
     files.sort(key = lambda x: int(x[5:-4]))
     for i in range(int(len(files))):
         filename=pathIn + files[i]
-        #reading each files
+        #reading each files3
         img = cv2.imread(filename)
         height, width, layers = img.shape
         size = (width,height)
@@ -118,7 +124,7 @@ def convert_frames_to_video(pathIn,pathOut,fps):
         # writing to a image array
         out.write(frame_array[i])
     out.release()
-    
+
 def processframes(pathIn, pathOut):
     if not os.path.isdir(pathIn):
         os.mkdir(pathIn)

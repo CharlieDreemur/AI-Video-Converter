@@ -1,8 +1,8 @@
 <script>
     let fps = 1;
     let videoData = null;
-    $: serverVideoSrc = videoData == null ? null : `/dlv?dfn=${videoData.name}`; // bind
-
+    //$: serverVideoSrc = videoData == null ? null : `/dlv?dfn=${videoData.name}`; // bind
+	let serverVideoSrc = null;
     import { getRandomAdjective } from "./randomAdjective.js";
     import { submitFormInBackground } from "./formSubmission.js";
     import DownloadButton from "./DownloadButton.svelte";
@@ -67,8 +67,9 @@
 					return res.text();
 				}
             })
-			.then(text => {
+			.then(output => {
 				// Handle text response if needed
+				serverVideoSrc = output;
 			})
             .catch(err => {
                 submitting = false;
