@@ -25,9 +25,9 @@ def total(video_file,fps,cut_seconds):
     audio_path=os.path.join(filename, 'my_audio.wav')
     extractaudio.extract_audio(cutnsec_path, audio_path)
 
-    '''processframes_path=os.path.join(filename, 'processframes')
-    frameconverter.processframes(video2frame_path, processframes_path)'''
-    frame2videoinput_path=video2frame_path+"/"
+    processframes_path=os.path.join(filename, 'processframes')
+    frameconverter.processframes(video2frame_path, processframes_path)
+    frame2videoinput_path=processframes_path+"/"
     frame2video_path=os.path.join(filename, 'frame2video.mp4')
     frameconverter.convert_frames_to_video(frame2videoinput_path,frame2video_path,fps)
     combined_path=os.path.join(filename, 'combined.mp4')

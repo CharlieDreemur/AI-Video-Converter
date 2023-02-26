@@ -6,11 +6,8 @@ import webuiAPI.generator
 from PIL import Image, PngImagePlugin
 import logging
 import compress
+import webuiAPI.setting
 
-setup={
-    'width': 512,
-    'height': 512,
-}
 def format_timedelta(td):
     """Utility function to format timedelta objects in a cool way (e.g 00:00:20.05) 
     omitting microseconds and retaining milliseconds"""
@@ -133,10 +130,10 @@ def processframes(pathIn, pathOut):
         #reading each files
         img = Image.open(filename)
         height, width = img.width, img.height
-        setup["width"]=512
-        setup["height"]=512
+        webuiAPI.setting.setup["width"]=height
+        webuiAPI.setting.setup["height"]=width
         print(filename)
-        output = webuiAPI.generator.controlNetImg2img(img, setup)
+        output = webuiAPI.generator.controlNetImg2img(image=img, setup=webuiAPI.setting.setup)
         #inserting the frames into an image array
         webuiAPI.generator.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
         temp+=1
