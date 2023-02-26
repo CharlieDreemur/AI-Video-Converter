@@ -5,6 +5,10 @@ from os.path import isfile, join
 import webuiAPI.generator
 from PIL import Image, PngImagePlugin
 
+setup={
+    'width': 512,
+    'height': 512,
+}
 def format_timedelta(td):
     """Utility function to format timedelta objects in a cool way (e.g 00:00:20.05) 
     omitting microseconds and retaining milliseconds"""
@@ -78,12 +82,10 @@ def frame2video(pathIn,pathOut,fps):
         filename=pathIn + files[i]
         #reading each files
         img = cv2.imread(filename)
-        height, width, layers = img.shape
-        size = (width,height)
         print(filename)
         #inserting the frames into an image array
         frame_array.append(img)
-    out = cv2.VideoWriter(pathOut,cv2.VideoWriter_fourcc(*'DIVX'), fps, size)
+    out = cv2.VideoWriter(pathOut,cv2.VideoWriter_fourcc(*'DIVX'), fps, (setup["width"],  setup["height"]))
     for i in range(len(frame_array)):
         # writing to a image array
         out.write(frame_array[i])
@@ -100,8 +102,11 @@ def processframes(pathIn, pathOut):
         filename=pathIn+files[i]
         #reading each files
         img = Image.open(filename)
+        height, width = img.width, img.height
+        setup["width"]=width
+        setup["height"]=height
         print(filename)
-        output = webuiAPI.generator.controlNetImg2img(img)
+        output = webuiAPI.generator.controlNetImg2img(img, setup)
         #inserting the frames into an image array
         webuiAPI.generator.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
         temp+=1
