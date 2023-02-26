@@ -119,11 +119,10 @@ def controlNetImg2img(image):
            )
     return output.image
 
-def saveimg(path, img):
+def saveimg(img, path, fileName='output'):
     if not os.path.exists(path):
         os.makedirs(path)
-    now = datetime.datetime.now()
-    img.save(path+'/'+now.strftime('%Y%m%d%H%M%S%f')+'.png')
+    img.save(path + '/' + fileName + '.png', 'PNG')
 
 if __name__ == '__main__':
     pil_image = Image.open("D:\StudyLife\Github\HackIllinois\input/input2.png")

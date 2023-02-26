@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import os
 from os.path import isfile, join
+import webuiAPI.client
+from PIL import Image, PngImagePlugin
+
 def format_timedelta(td):
     """Utility function to format timedelta objects in a cool way (e.g 00:00:20.05) 
     omitting microseconds and retaining milliseconds"""
@@ -33,6 +36,26 @@ def convert_frames_to_video(pathIn,pathOut,fps):
         # writing to a image array
         out.write(frame_array[i])
     out.release()
+    
+def outputfolder(pathIn, pathOut):
+    foldername = "D:\StudyLife\Github\HackIllinois\output"
+    path=os.path.join(pathIn,foldername)
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    files = [f for f in os.listdir(pathIn) if isfile(join(pathIn, f))]
+    #for sorting the file names properly
+    files.sort(key = lambda x: int(x[5:-4]))
+    temp=0
+    for i in range(int(len(files))):
+        filename=pathIn+files[i]
+        #reading each files
+        img = Image.open(filename)
+        print(filename)
+        output = webuiAPI.client.controlNetImg2img(img)
+        #inserting the frames into an image array
+        webuiAPI.client.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
+        temp+=1
+        
 def main(pathIn,fps):
     pathOut = 'video.avi'
     convert_frames_to_video(pathIn, pathOut, fps)
