@@ -47,7 +47,7 @@
             {:else}
             <VideoPlayer srcURL={file.src} type={getFileExtension(file.name)} trashVideo={() => file = null} />
             {/if}
-            <input id="video" name="video" type="file" accept="video/mp4" class="hidden" bind:this={fileInput} on:change={fileUpdated} />
+            <input id="video" name="video" type="file" accept="video/mp4" class="hidden" bind:this={fileInput} on:change={fileUpdated} disabled={file !== null} />
             {#if errorText != null}
             <p class="text-red-400">An error occurred: {errorText}</p>
             {/if}

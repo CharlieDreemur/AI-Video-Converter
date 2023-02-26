@@ -1,14 +1,13 @@
 <script>
-    export let videoSrc = null; // bind
-    export let videoName = null; // bind
-    export let responseText = null; // bind
-    export let fps = 1; // bind
-    export let videoData = null;
-    export let serverVideoSrc = null;
-    
+    let fps = 1;
+    let videoData = null;
+    $: serverVideoSrc = videoData == null ? null : `/dlv?dfn=${videoData.name}`; // bind
+
     import { getRandomAdjective } from "./randomAdjective.js";
     import { submitFormInBackground } from "./formSubmission.js";
     import VideoUpload from "./VideoUpload.svelte";
+    import DownloadButton from "./DownloadButton.svelte";
+    import VideoPlayer from "./VideoPlayer.svelte";
     
 	const uploadURL = "/upv";
 	const samplingMethods = ["Euler a"]; // todo add
@@ -19,9 +18,18 @@
         submitFormInBackground(e)
             .then(res => {
                 submitting = false;
-                // send up
-                responseText = res.text();
+				if (res.status !== 200) {
+					errorText = `Got a bad response from the server (${res.status})`;
+				} else {
+					// send up
+					serverVideoReadyState = 2;
+					console.log(serverVideoSrc);
+					return res.text();
+				}
             })
+			.then(text => {
+				// Handle text response if needed
+			})
             .catch(err => {
                 submitting = false;
                 errorText = err.message;
@@ -36,23 +44,16 @@
     let submitting = false;
     
 	let serverVideoReadyState = 0; // 0 = not started, 1 = processing, 2 = ready
-	let serverResponse = null;
-	$: {
-		if (serverResponse != null) {
-			// todo should be 1 until ready
-			serverVideoReadyState = 2;
-		}
-	}
 </script>
 
-<form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit|preventDefault={submitVideoForm}>
+<form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit|preventDefault={submitVideoForm}>
 	<div class="grid sm:grid-cols-2 justify-center text-center mt-8">
         <VideoUpload bind:file={videoData} />
         <div class="m-2 p-2 border-solid border-2 ring-offset-2 border-gray-500">
             <p>Output</p>
-            {#if serverVideoSrc === 2}
+            {#if serverVideoReadyState === 2}
                 <DownloadButton bind:url={serverVideoSrc} />
-                <VideoPlayer bind:srcURL={serverVideoSrc} type={"mp4"} />
+                <VideoPlayer bind:srcURL={serverVideoSrc} type={"mp4"} trashVideo={() => serverVideoReadyState = 0} />
             {/if}
         </div>
     </div>
@@ -86,9 +87,9 @@
 		</select>
 	</label>
 
-    <input type="submit" value={submitting ? "Processing..." : "Upload"} class="self-center cursor-pointer" disabled={submitting}>
+    <input type="submit" value={submitting ? "Processing..." : "Generate"} class="self-center cursor-pointer" disabled={submitting}>
     {#if errorText != null}
-    <p class="text-red-400">An error occurred: {errorText}</p>
+    <p class="text-red-400 text-center">An error occurred: {errorText}</p>
     {/if}
 </form>
 
