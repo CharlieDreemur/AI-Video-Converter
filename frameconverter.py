@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 from os.path import isfile, join
-import webuiAPI.client
+import webuiAPI.generator
 from PIL import Image, PngImagePlugin
 
 def format_timedelta(td):
@@ -15,7 +15,6 @@ def format_timedelta(td):
         return (result + ".00").replace(":", "-")
     ms = int(ms)
     ms = round(ms / 1e4)
-    
     return f"{result}.{ms:02}".replace(":", "-")
 def get_saving_frames_durations(cap, saving_fps):
     """A function that returns the list of durations where to save the frames"""
@@ -105,12 +104,13 @@ def processframes(pathIn, pathOut):
         #reading each files
         img = Image.open(filename)
         print(filename)
-        output = webuiAPI.client.controlNetImg2img(img)
+        output = webuiAPI.generator.controlNetImg2img(img)
         #inserting the frames into an image array
-        webuiAPI.client.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
+        webuiAPI.generator.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
         temp+=1
         
 if __name__=="__main__":
     import sys
     pathin=sys.argv[1]
     pathout=sys.argv[2]
+    
