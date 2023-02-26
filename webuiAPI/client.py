@@ -123,6 +123,6 @@ def saveimg(path, img):
     img.save(path+'/'+now.strftime('%Y%m%d%H%M%S%f')+'.png')
 
 if __name__ == '__main__':
-    pil_image = Image.open("input/thebatman2022.png")
+    pil_image = Image.open("D:\StudyLife\Github\HackIllinois\input/input2.png")
     image = controlNetImg2img(pil_image)
-    saveimg("D:\StudyLife\Github\HackIllinois\webuiAPI\output", image)
+    saveimg("D:\StudyLife\Github\HackIllinois\output", image)
