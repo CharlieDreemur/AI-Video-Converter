@@ -5,6 +5,7 @@ from os.path import isfile, join
 import webuiAPI.generator
 from PIL import Image, PngImagePlugin
 import logging
+import compress
 
 setup={
     'width': 512,
@@ -67,6 +68,7 @@ def video2frame(video_file,framepersec=60):
             # if closest duration is less than or equals the frame duration, 
             # then save the frame
             cv2.imwrite(os.path.join(filename, f"frame{temp}.png"), frame) 
+            compress.resize_png(os.path.join(filename, f"frame{temp}.png"))
             temp=temp+1
             # drop the duration spot from the list, since this duration spot is already saved
             try:
@@ -75,8 +77,9 @@ def video2frame(video_file,framepersec=60):
                 pass
         # increment the frame count
         count += 1
+    return filename
 
-def frame2video(pathIn,pathOut,fps):
+'''def frame2video(pathIn,pathOut,fps):
     logging.info(f"pathIn: {pathIn}")
     logging.info(f"pathOut: {pathOut}")
     frame_array = []
@@ -90,8 +93,28 @@ def frame2video(pathIn,pathOut,fps):
         print(filename)
         #inserting the frames into an image array
         frame_array.append(img)
-    out = cv2.VideoWriter(pathOut,cv2.VideoWriter_fourcc(*'DIVX'), fps, (setup["width"],  setup["height"]))
+    out = cv2.VideoWriter(pathOut,cv2.VideoWriter_fourcc(*'mp4v'), fps, (setup["width"],  setup["height"]))
     logging.info("HERE TO OUT")
+    for i in range(len(frame_array)):
+        # writing to a image array
+        out.write(frame_array[i])
+    out.release()'''
+
+def convert_frames_to_video(pathIn,pathOut,fps):
+    frame_array = []
+    files = [f for f in os.listdir(pathIn) if isfile(join(pathIn, f))]
+    #for sorting the file names properly
+    files.sort(key = lambda x: int(x[5:-4]))
+    for i in range(int(len(files))):
+        filename=pathIn + files[i]
+        #reading each files
+        img = cv2.imread(filename)
+        height, width, layers = img.shape
+        size = (width,height)
+        print(filename)
+        #inserting the frames into an image array
+        frame_array.append(img)
+    out = cv2.VideoWriter(pathOut,cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
     for i in range(len(frame_array)):
         # writing to a image array
         out.write(frame_array[i])
