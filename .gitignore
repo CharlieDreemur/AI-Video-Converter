@@ -4,3 +4,6 @@ client/public/build/
 client/.DS_Store
 
 server/uploads/*
+
+webuiAPI/output/*
+webuiAPI/input/*

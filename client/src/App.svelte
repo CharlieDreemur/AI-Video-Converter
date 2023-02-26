@@ -5,6 +5,7 @@
 	import VideoPlayer from "./util/VideoPlayer.svelte";
 	import InputForm from "./util/InputForm.svelte";
     import Logo from "./Logo.svelte";
+    import { getFileExtension } from "./util/formSubmission";
 
 	let clientVideoSrc = null;
 	let clientVideoName = null;
@@ -24,7 +25,7 @@
 <div class="grid sm:grid-cols-2 justify-center text-center mt-8">
 	<div>
 		<p>Input</p>
-		<VideoPlayer bind:srcURL={clientVideoSrc} type={clientVideoName != null ? clientVideoName.substring(clientVideoName.lastIndexOf(".") + 1) : null} />
+		<VideoPlayer bind:srcURL={clientVideoSrc} type={getFileExtension(clientVideoName)} />
 	</div>
 	<div>
 		<p>Output</p>
