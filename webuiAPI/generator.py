@@ -54,7 +54,7 @@ def pil_to_base64(pil_image):
         return "data:image/png;base64," + base64_str
 
 
-payload = {
+setup = {
     "prompt": "best quality, masterpiece, 1girl",
     #"negative_prompt": "",
     "steps": 30,
@@ -84,11 +84,11 @@ def pil_to_base64(pil_image):
             base64_str = str(base64.b64encode(stream.getvalue()), "utf-8")
             return "data:image/png;base64," + base64_str
         
-def img2img(image, payload):
+def img2img(image, setup):
     #Convert image to base64
-    payload["init_images"] = [pil_to_base64(image)] #Plug converted Image to Payload
+    setup["init_images"] = [pil_to_base64(image)] #Plug converted Image to Payload
 
-    response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
+    response = requests.post(url=f'{url}/sdapi/v1/img2img', json=setup)
     r = response.json()
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
@@ -102,11 +102,13 @@ def img2img(image, payload):
         pnginfo.add_text("parameters", response2.json().get("info"))
         return image
 
-def controlNetImg2img(image):
+def controlNetImg2img(image, setup):
     cn = webuiapi.ControlNetInterface(api)
     cn.model_list()
     print(cn.model_list())
     output = cn.img2img(prompt="best quality, anime, 1girl, batman",
+            width=setup['width'],
+            height=setup['height'],
             init_images=[image], 
             controlnet_input_image=[image], 
             controlnet_weight = 1,
