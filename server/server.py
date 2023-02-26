@@ -39,6 +39,7 @@ def upload_video():
     prompt = request.form['prompt']
     style = request.form['styles']
     type = request.form['type']
+    setting.add_prompt(prompt)
     setting.setup_model_match(style)
     setting.setup_type_match(type)
     app.logger.info(f"style: {setting.setup['sd_model_checkpoint']}")
