@@ -7,7 +7,7 @@ import requests
 import io
 import base64
 from io import BytesIO
-
+import webuiAPI.setting
 
 
 # create API client
@@ -27,33 +27,6 @@ api.set_auth('username', 'password')
 
 
 
-url = "http://127.0.0.1:7860"
-setup = {
-    "prompt": "best quality, 8K, highres, masterpiece, highly detailed, 1girl, delicate, cute",
-    "negative_prompt": "(worst quality), (bad quality), nsfw",
-    "steps": 40,
-    "denoising_strength": 0.5,
-    #"mask": "string",
-    #"mask_blur": 4,
-    #"inpainting_fill": 0,
-    #"inpaint_full_res": True,
-    #"inpaint_full_res_padding": 0,
-    #"inpainting_mask_invert": 0,
-    #"initial_noise_multiplier": 0,
-    #"styles": ["string"],
-    "seed": 114514,
-    "sampler_name": "DPM++ 2M Karras",
-    "cfg_scale": 12,
-    "width": 512,
-    "height": 512,
-    "restore_faces": False,
-    #"tiling": False,
-    #"override_settings": {},
-    #"override_settings_restore_afterwards": True,
-    #"include_init_images": False
-    "controlnet_module":'hed',
-    "controlnet_model":'control_hed-fp16 [13fee50b]',
-}
 
 def txt2img(prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
     result = api.txt2img(prompt=prompt_in,
@@ -105,8 +78,8 @@ def controlNetImg2img(image, setup):
             init_images=[image], 
             controlnet_input_image=[image], 
             steps= setup['steps'],
-            controlnet_weight = 1,
-            controlnet_guidance = 1,
+            controlnet_weight = setup['controlnet_weight'],
+            controlnet_guidance = setup['controlnet_guidance'],
             denoising_strength= setup['denoising_strength'],
             sampler_index= setup['sampler_name'],
             cfg_scale= setup['cfg_scale'],
@@ -122,6 +95,8 @@ def saveimg(img, path, fileName='output'):
 
 if __name__ == '__main__':
     pil_image = Image.open('D:\StudyLife\Github\HackIllinois\input/105661084_p0_master1200.png')
-    image = controlNetImg2img(pil_image, setup)
-    print(setup)
+    webuiAPI.setting.setup_model_match(style="amime")
+    webuiAPI.setting.setup_type_match(type="character")
+    image = controlNetImg2img(pil_image, webuiAPI.setting.setup)
+    print(webuiAPI.setting.setup)
     saveimg(img = image, path="D:\StudyLife\Github\HackIllinois\output")

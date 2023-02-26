@@ -1,12 +1,13 @@
 import requests
-url = "http://127.0.0.1:7860"
+
 
 # the defaults if doesn't set anything
 setup = {
+    "url": "http://127.0.0.1:7860",
     "sd_model_checkpoint": "anything-v4.5-pruned",
     "fps": 30,
-    "prompt": "best quality, 8K, highres, masterpiece, highly detailed",
-    "negative_prompt": "(worst quality), (bad quality), nsfw",
+    "prompt": "best quality, 8K, highres, masterpiece, highly detailed, 1girl",
+    "negative_prompt": "(worst quality), (bad quality), nsfw, easynative",
     #Sampling
     "sampler_name": "DPM++ 2M Karras",
     "steps": 40,
@@ -18,11 +19,13 @@ setup = {
     "height": 512,
     "restore_faces": False,
     #controlNet
-    "controlnet_module":'hed',
-    "controlnet_model":'control_hed-fp16 [13fee50b]',
+    "controlnet_module":'canny',
+    "controlnet_model":'control_canny-fp16 [e3fe7712]',
+    "controlnet_weight": 1,
+    "controlnet_guidance": 1,
     
 }
-def setup_match(style, type):
+def setup_model_match(style):
     if style == "anime":
         setup["sd_model_checkpoint"] = "anything-v4.5-pruned"
     if style == "realistic":
@@ -33,6 +36,8 @@ def setup_match(style, type):
     if style == "art":
         setup["sd_model_checkpoint"] = "dreamlikeDiffusion10_10"
         setup["prompt"] += "dreamlikeart,"
+
+def setup_type_match(type):
     if type == "general":
         setup["controlnet_module"] = 'hed'
         setup["controlnet_model"] = 'control_hed-fp16 [13fee50b]'
@@ -45,11 +50,13 @@ def setup_match(style, type):
     if type == "dance":
         setup["controlnet_module"] = 'openpose'
         setup["controlnet_model"] = 'control_openpose-fp16 [9ca67cc5]'
-    
+
+
 def add_prompt(prompt):
     setup["prompt"] += prompt
 
 def get_models_name():
+    url = setup["url"]
     response = requests.get(url=f'{url}/sdapi/v1/sd-models')
     if response.status_code == 200:  # 200 indicates success
         data = response.json()  # Parse the response as JSON
@@ -67,6 +74,7 @@ def set_option(sd_model_checkpoint):
         "sd_model_checkpoint": sd_model_checkpoint,
         #"CLIP_stop_at_last_layers": 2
     }
+    url = setup["url"]
     response = requests.post(url=f'{url}/sdapi/v1/options', json=option_payload)
     if response.status_code == 200:
         print("Set option successfully to "+sd_model_checkpoint)
