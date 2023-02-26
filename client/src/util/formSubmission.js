@@ -14,3 +14,7 @@ export async function submitFormInBackground(e) {
         .catch(rej => reject(rej));
     });
 };
+
+export function getFileExtension(filename) {
+    return filename != null ? filename.substring(filename.lastIndexOf(".") + 1) : null;
+}
