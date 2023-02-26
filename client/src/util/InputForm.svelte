@@ -4,7 +4,7 @@
     
     import { submitFormInBackground } from "./formSubmission.js";
     
-	const uploadURL = "/api/diffuse";
+	const uploadURL = "/upv";
 	const samplingMethods = ["Euler a", "idk"]; // todo add
 	const models = ["protogenX34OfficialR_1.ckpt"]; // todo add
     let videoName = null;

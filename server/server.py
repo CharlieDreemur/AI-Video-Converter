@@ -43,8 +43,10 @@ def hello():
 @app.route("/upv", methods=["POST"])
 def upload_video():
     app.logger.info("HERE in UPLOAD VIDEO")
-    file = request.files['file']
+    file = request.files['video']
     filename = file.filename
+    if not os.path.isdir(app.config['UPLOAD_FOLDER']):
+        os.mkdir(app.config['UPLOAD_FOLDER'])
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
