@@ -81,12 +81,19 @@ def controlNetImg2img(image, setup):
             controlnet_weight = setup['controlnet_weight'],
             controlnet_guidance = setup['controlnet_guidance'],
             denoising_strength= setup['denoising_strength'],
-            sampler_index= setup['sampler_name'],
+            sampler_index= setup['sampling_index'],
             cfg_scale= setup['cfg_scale'],
             controlnet_module= setup['controlnet_module'],
             controlnet_model= setup['controlnet_model'],
            )
     return output.image
+
+def controlNet(setup, path):
+    response = requests.post(url=f'{url}/controlnet/txt2img', json=setup)
+    r = response.json()
+    for i in r['images']:
+        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+        saveimg(img, path)
 
 def saveimg(img, path, fileName='output'):
     if not os.path.exists(path):
@@ -97,6 +104,5 @@ if __name__ == '__main__':
     pil_image = Image.open('D:\StudyLife\Github\HackIllinois\input/105661084_p0_master1200.png')
     webuiAPI.setting.setup_model_match(style="amime")
     webuiAPI.setting.setup_type_match(type="character")
-    image = controlNetImg2img(pil_image, webuiAPI.setting.setup)
-    print(webuiAPI.setting.setup)
-    saveimg(img = image, path="D:\StudyLife\Github\HackIllinois\output")
+    path="D:\StudyLife\Github\HackIllinois\output"
+    controlNet(webuiAPI.setting.setup, path)
