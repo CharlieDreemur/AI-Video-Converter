@@ -1,10 +1,19 @@
 from moviepy.editor import VideoFileClip
 import ffmpeg
 from moviepy.editor import VideoFileClip, AudioFileClip
-def extract_audio(input_path, audio_path):
-    clip1 = VideoFileClip(input_path)
-    audio = clip1.audio
-    audio.write_audiofile(audio_path)
+def extract_audio(input_path1, audio_path1):
+    video_clip = VideoFileClip(input_path1)
+
+    # Extract the audio from the video clip
+    audio_clip = video_clip.audio
+
+    # Save the audio to a file
+    audio_clip.write_audiofile(audio_path1)
+
+    # Release the resources used by the video and audio clips
+    video_clip.close()
+    audio_clip.close()
+
 
 def add_audio_to_video(video_path, audio_path, combined_path):
     # Load the video clip

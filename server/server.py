@@ -50,7 +50,7 @@ def upload_video():
     filename = request.form["fname"]
     if not os.path.isdir(app.config['UPLOAD_FOLDER']):
         os.mkdir(app.config['UPLOAD_FOLDER'])
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+".mp4"))
     fname = filename+".mp4"
     frameconverter.video2frame(os.path.join(app.config['UPLOAD_FOLDER'], fname), fps)
     dirin = os.path.join(app.config['UPLOAD_FOLDER'], fname[:-4] + "-opencv\\")

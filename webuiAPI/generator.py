@@ -7,7 +7,7 @@ import requests
 import io
 import base64
 from io import BytesIO
-import webuiAPI.setting
+from . import setting
 
 
 # create API client
@@ -57,6 +57,7 @@ def pil_to_base64(pil_image):
         
 def img2img(image, setup):
     #Convert image to base64
+    url = setting.setup["url"]
     setup["init_images"] = [pil_to_base64(image)] #Plug converted Image to Payload
     response = requests.post(url=f'{url}/sdapi/v1/img2img', json=setup)
     r = response.json()
@@ -66,9 +67,10 @@ def img2img(image, setup):
             "image": "data:image/png;base64," + i
         }
         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+        
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
-        return image
+    return image
 
 def controlNetImg2img(image, setup):
     cn = webuiapi.ControlNetInterface(api)
@@ -94,9 +96,8 @@ def saveimg(img, path, fileName='output'):
     img.save(path + '/' + fileName + '.png', 'PNG')
 
 if __name__ == '__main__':
-    pil_image = Image.open('D:\StudyLife\Github\HackIllinois\input/105661084_p0_master1200.png')
-    webuiAPI.setting.setup_model_match(style="amime")
-    webuiAPI.setting.setup_type_match(type="character")
-    image = controlNetImg2img(pil_image, webuiAPI.setting.setup)
-    print(webuiAPI.setting.setup)
+    pil_image = Image.open('D:\StudyLife\Github\HackIllinois\input\young-woman-showing-smile-casual-260nw-601626770.webp')
+    setting.setup_model_match(style="amime")
+    setting.setup_type_match(type="character")
+    image = controlNetImg2img(pil_image, setting.setup)
     saveimg(img = image, path="D:\StudyLife\Github\HackIllinois\output")
