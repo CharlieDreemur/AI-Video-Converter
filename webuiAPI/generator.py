@@ -111,11 +111,11 @@ def controlNetImg2img(image):
             controlnet_input_image=[image], 
             controlnet_weight = 1,
             controlnet_guidance = 1,
-            denoising_strength=0.7,
+            denoising_strength=0.3,
             sampler_index="Euler a",
             cfg_scale=7,
-            controlnet_module='canny',
-            controlnet_model='control_canny-fp16 [e3fe7712]',
+            controlnet_module='hed',
+            controlnet_model='control_hed-fp16 [13fee50b]',
            )
     return output.image
 
