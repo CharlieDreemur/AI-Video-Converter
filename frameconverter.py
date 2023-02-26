@@ -40,6 +40,7 @@ def video2frame(video_file,framepersec=60):
     cap = cv2.VideoCapture(video_file)
     if cap.isOpened() == False:
         cap.open(video_file)
+        logging.info(f"open{cap.isOpened()}")
     # get the FPS of the video
     fps = cap.get(cv2.CAP_PROP_FPS)
     # if the SAVING_FRAMES_PER_SECOND is above video FPS, then set it to FPS (as maximum)

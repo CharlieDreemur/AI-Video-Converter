@@ -10,9 +10,8 @@
     
 	const uploadURL = "/upv";
 	const samplingMethods = ["Euler a"]; // todo add
-	const models = ["protogenX34OfficialR_1.ckpt"]; // todo add
-	import { onMount } from 'svelte';
-    import { stop_propagation } from 'svelte/internal';
+	const styles = ["anime", "realistic", "3D-anime", "art"];
+	const types = ["general", "character", "building", "dance"];
     import { getFileExtension } from "./formSubmission";
 
     export let file = null;
@@ -127,12 +126,22 @@
 		<span>Output FPS</span>
 		<input id="fps" name="fps" type="number" min="1" bind:value={fps} />
 	</label>
-	<label for="model">
-		<span>Model</span>
-		<select id="model" name="model">
-			{#each models as op}
-				<option value={op}>
-					{op}
+	<label for="styles">
+		<span>Style</span>
+		<select id="styles" name="styles">
+			{#each styles as ss}
+				<option value={ss}>
+					{ss}
+				</option>
+			{/each}
+		</select>
+	</label>
+	<label for="type">
+		<span>Type</span>
+		<select id="type" name="type">
+			{#each types as tp}
+				<option value={tp}>
+					{tp}
 				</option>
 			{/each}
 		</select>
