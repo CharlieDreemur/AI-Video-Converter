@@ -10,7 +10,7 @@
     import { submitFormInBackground } from "./formSubmission.js";
     import VideoUpload from "./VideoUpload.svelte";
     
-	const uploadURL = "/api/diffuse";
+	const uploadURL = "/upv";
 	const samplingMethods = ["Euler a"]; // todo add
 	const models = ["protogenX34OfficialR_1.ckpt"]; // todo add
 

@@ -4,6 +4,7 @@ import os
 from os.path import isfile, join
 import webuiAPI.generator
 from PIL import Image, PngImagePlugin
+import logging
 
 setup={
     'width': 512,
@@ -36,8 +37,12 @@ def video2frame(video_file,framepersec=60):
     # make a folder by the name of the video file
     if not os.path.isdir(filename):
         os.mkdir(filename)
-    # read the video file    
+    # read the video file
+    logging.info("FILEPATH=" + video_file)
     cap = cv2.VideoCapture(video_file)
+    if cap.isOpened() == False:
+        cap.open(video_file)
+    logging.info("OPEN"+str(cap.isOpened()))
     # get the FPS of the video
     fps = cap.get(cv2.CAP_PROP_FPS)
     # if the SAVING_FRAMES_PER_SECOND is above video FPS, then set it to FPS (as maximum)
@@ -110,9 +115,10 @@ def processframes(pathIn, pathOut):
         #inserting the frames into an image array
         webuiAPI.generator.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
         temp+=1
-        
+'''
 if __name__=="__main__":
     import sys
     #pathin=sys.argv[1]
     #pathout=sys.argv[2]
     processframes('D:\StudyLife\Github\HackIllinois\input\girl-44686_4-opencv/', 'output/')
+'''
