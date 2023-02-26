@@ -9,3 +9,9 @@ webuiAPI/output/*
 webuiAPI/input/*
 
 uploads/*
+
+input/*
+
+downloads/*
+
+outputs/*

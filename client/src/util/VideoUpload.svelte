@@ -6,7 +6,7 @@
 
     export let file = null;
 
-    const MAX_UPLOAD_SIZE_MB = 10;
+    const MAX_UPLOAD_SIZE_MB = 100;
 
     let fileInput = null;
     function promptUploadFile() {}

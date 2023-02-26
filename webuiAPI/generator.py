@@ -87,17 +87,14 @@ def pil_to_base64(pil_image):
 def img2img(image, setup):
     #Convert image to base64
     setup["init_images"] = [pil_to_base64(image)] #Plug converted Image to Payload
-
     response = requests.post(url=f'{url}/sdapi/v1/img2img', json=setup)
     r = response.json()
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-
         png_payload = {
             "image": "data:image/png;base64," + i
         }
         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
-
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
         return image
@@ -105,7 +102,6 @@ def img2img(image, setup):
 def controlNetImg2img(image, setup):
     cn = webuiapi.ControlNetInterface(api)
     cn.model_list()
-    print(cn.model_list())
     output = cn.img2img(prompt="best quality, anime, 1girl, batman",
             width=setup['width'],
             height=setup['height'],
