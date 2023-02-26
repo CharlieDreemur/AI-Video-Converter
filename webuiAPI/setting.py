@@ -27,32 +27,26 @@ def get_models_name():
     response = requests.get(url=f'{url}/sdapi/v1/sd-models')
     if response.status_code == 200:  # 200 indicates success
         data = response.json()  # Parse the response as JSON
+        models_name=[]
         for(i, model) in enumerate(data):
-            models_name=[]
             models_name.append(model["model_name"])
-            return models_name
-    else:
-        print(f'Request failed with status code {response.status_code}')
-
-def get_sampler_name():
-    response = requests.get(url=f'{url}/sdapi/v1/sampler')
-    if response.status_code == 200:  # 200 indicates success
-        data = response.json()  # Parse the response as JSON
-        for(i, model) in enumerate(data):
-            sampler_name=[]
-            sampler_name.append(model["model_name"])
-            return sampler_name
+        return models_name
     else:
         print(f'Request failed with status code {response.status_code}')
 
 
-def set_option(setup):
+
+def set_option(sd_model_checkpoint):
     option_payload = {
-        "sd_model_checkpoint": "Anything-V3.0-pruned.ckpt [2700c435]",
+        "sd_model_checkpoint": sd_model_checkpoint,
         #"CLIP_stop_at_last_layers": 2
     }
     response = requests.post(url=f'{url}/sdapi/v1/options', json=option_payload)
-    
+    if response.status_code == 200:
+        print("Set option successfully to "+sd_model_checkpoint)
+    else:
+        print(f'Request failed with status code {response.status_code}')
+
 if __name__ == '__main__':
-    get_models_name()
-    get_sampler_name()
+    print(get_models_name())
+    set_option('dreamlike-photoreal-2.0')
