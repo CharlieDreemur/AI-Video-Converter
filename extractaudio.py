@@ -27,10 +27,10 @@ def add_audio_to_video(video_path, audio_path, combined_path):
     # Write the new video clip to the output file
     video_clip.write_videofile(combined_path)
 
-if __name__=="__main__":
+'''if __name__=="__main__":
     input_path = 'test1.mp4'
-    audio_path = 'my_audio.wav'
+    audio_path = 'my_audio.mp3'
     extract_audio(input_path, audio_path)
     video_path = 'video.mp4'
     combinedvideo_path = 'my_combined_video.mp4'
-    add_audio_to_video(video_path, audio_path, combinedvideo_path)
+    add_audio_to_video(video_path, audio_path, combinedvideo_path)'''
