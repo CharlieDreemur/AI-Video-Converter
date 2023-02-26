@@ -99,6 +99,23 @@ def img2img(image, payload):
         pnginfo.add_text("parameters", response2.json().get("info"))
         return image
 
+def controlNetImg2img(image):
+    cn = webuiapi.ControlNetInterface(api)
+    cn.model_list()
+    print(cn.model_list())
+    output = cn.img2img(prompt="best quality, anime, 1girl, batman",
+            init_images=[image], 
+            controlnet_input_image=[image], 
+            controlnet_weight = 1,
+            controlnet_guidance = 1,
+            denoising_strength=0.7,
+            sampler_index="Euler a",
+            cfg_scale=7,
+            controlnet_module='canny',
+            controlnet_model='control_canny-fp16 [e3fe7712]',
+           )
+    return output.image
+
 def saveimg(path, img):
     if not os.path.exists(path):
         os.makedirs(path)
@@ -106,6 +123,6 @@ def saveimg(path, img):
     img.save(path+'/'+now.strftime('%Y%m%d%H%M%S%f')+'.png')
 
 if __name__ == '__main__':
-    pil_image = Image.open("D:\StudyLife\Github\HackIllinois\webuiAPI\input\input.png")
-    image = img2img(pil_image, payload=payload)
-    saveimg('output', image)
+    pil_image = Image.open("input/thebatman2022.png")
+    image = controlNetImg2img(pil_image)
+    saveimg("D:\StudyLife\Github\HackIllinois\webuiAPI\output", image)
