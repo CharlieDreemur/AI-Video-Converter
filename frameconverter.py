@@ -59,7 +59,6 @@ def video2frame(video_file,framepersec=60):
         if frame_duration >= closest_duration:
             # if closest duration is less than or equals the frame duration, 
             # then save the frame
-            frame_duration_formatted = format_timedelta(timedelta(seconds=frame_duration))
             cv2.imwrite(os.path.join(filename, f"frame{temp}.png"), frame) 
             temp=temp+1
             # drop the duration spot from the list, since this duration spot is already saved
@@ -91,10 +90,8 @@ def frame2video(pathIn,pathOut,fps):
     out.release()
     
 def processframes(pathIn, pathOut):
-    foldername = "D:\StudyLife\Github\HackIllinois\output"
-    path=os.path.join(pathIn,foldername)
-    if not os.path.isdir(path):
-        os.mkdir(path)
+    if not os.path.isdir(pathIn):
+        os.mkdir(pathIn)
     files = [f for f in os.listdir(pathIn) if isfile(join(pathIn, f))]
     #for sorting the file names properly
     files.sort(key = lambda x: int(x[5:-4]))
@@ -111,6 +108,6 @@ def processframes(pathIn, pathOut):
         
 if __name__=="__main__":
     import sys
-    pathin=sys.argv[1]
-    pathout=sys.argv[2]
-    
+    #pathin=sys.argv[1]
+    #pathout=sys.argv[2]
+    processframes('D:\StudyLife\Github\HackIllinois\input\girl-44686_4-opencv/', 'output/')
