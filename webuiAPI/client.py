@@ -107,5 +107,5 @@ def saveimg(path, img):
 
 if __name__ == '__main__':
     pil_image = Image.open("D:\StudyLife\Github\HackIllinois\webuiAPI\input\input.png")
-    image = img2img(pil_image, payload)
+    image = img2img(pil_image, payload=payload)
     saveimg('output', image)

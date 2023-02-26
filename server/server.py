@@ -33,7 +33,7 @@ def base():
 
 @app.route("/<path:path>")
 def home(path):
-        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, path)
 
 @app.route("/rand")
 def hello():
@@ -48,8 +48,15 @@ def upload_video():
     if not os.path.isdir(app.config['UPLOAD_FOLDER']):
         os.mkdir(app.config['UPLOAD_FOLDER'])
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return "ok"
+
+@app.route("/dlv", methods=["GET"])
+def download_video():
+    fname = request.args.get('dfn')
+    app.logger.info("HERE in DOWNLOAD VIDEO")
+    return send_from_directory(app.config['DOWNLOAD_FOLDER'], f"{fname}.mp4")
 
 if __name__ == "__main__":
     app.config['UPLOAD_FOLDER'] = 'uploads'
+    app.config['DOWNLOAD_FOLDER'] = 'downloads'
     app.run(debug=True)
