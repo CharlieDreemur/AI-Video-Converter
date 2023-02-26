@@ -2,7 +2,7 @@ from moviepy.editor import VideoFileClip
 import ffmpeg
 from moviepy.editor import VideoFileClip, AudioFileClip
 def extract_audio(input_path, audio_path):
-    video_clip = VideoFileClip(input.path)
+    video_clip = VideoFileClip(input_path)
 
     # Extract the audio from the video clip
     audio_clip = video_clip.audio
