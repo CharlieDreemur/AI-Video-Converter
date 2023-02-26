@@ -1,9 +1,11 @@
 import cv2
 import os
 import datetime
+import webuiAPI.client
+from PIL import Image, PngImagePlugin
 from os.path import isfile, join
 def outputfolder(pathIn):
-    foldername = "outputfolder"
+    foldername = "D:\StudyLife\Github\HackIllinois\output"
     path=os.path.join(pathIn,foldername)
     if not os.path.isdir(path):
         os.mkdir(path)
@@ -14,11 +16,13 @@ def outputfolder(pathIn):
     for i in range(int(len(files))):
         filename=pathIn + files[i]
         #reading each files
-        img = cv2.imread(filename)
+        img = Image.open(filename)
         print(filename)
+        output = webuiAPI.client.controlNetImg2img(img)
         #inserting the frames into an image array
-        cv2.imwrite(os.path.join(path,f"frame{temp}.png"),img)
+        webuiAPI.client.saveimg((path+f"frame{temp}.png"), output)
         temp+=1
+        
 if __name__=="__main__":
     import sys
     pathin=sys.argv[1]

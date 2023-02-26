@@ -23,7 +23,7 @@ def get_saving_frames_durations(cap, saving_fps):
     for i in np.arange(0, clip_duration, 1 / saving_fps):
         s.append(i)
     return s
-def main(video_file,framepersec):
+def video2frame(video_file,framepersec=60):
     SAVING_FRAMES_PER_SECOND = framepersec
     filename, _ = os.path.splitext(video_file)
     filename += "-opencv"
@@ -70,5 +70,6 @@ def main(video_file,framepersec):
 if __name__ == "__main__":
     import sys
     video_file = sys.argv[1]
+    video2frame(video_file)
     framepersec= float(sys.argv[2])
-    main(video_file,framepersec)
+
