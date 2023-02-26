@@ -1,2 +1,18 @@
 
-webuiAPI/__pycache__/client.cpython-39.pyc
+client/node_modules/
+client/public/build/
+
+client/.DS_Store
+
+server/uploads/*
+
+webuiAPI/output/*
+webuiAPI/input/*
+
+uploads/*
+
+input/*
+
+downloads/*
+
+outputs/*

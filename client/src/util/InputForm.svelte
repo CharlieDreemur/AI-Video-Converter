@@ -1,46 +1,35 @@
 <script>
-    export let videoSrc = null; // bind
-    export let videoName = null; // bind
-    export let responseText = null; // bind
+    let fps = 1;
+    let videoData = null;
+    $: serverVideoSrc = videoData == null ? null : `/dlv?dfn=${videoData.name}`; // bind
 
-    const MAX_UPLOAD_SIZE_MB = 10;
-    
     import { getRandomAdjective } from "./randomAdjective.js";
-    import { getFileExtension, submitFormInBackground } from "./formSubmission.js";
+    import { submitFormInBackground } from "./formSubmission.js";
+    import VideoUpload from "./VideoUpload.svelte";
+    import DownloadButton from "./DownloadButton.svelte";
+    import VideoPlayer from "./VideoPlayer.svelte";
     
-	const uploadURL = "/api/diffuse";
+	const uploadURL = "/upv";
 	const samplingMethods = ["Euler a"]; // todo add
 	const models = ["protogenX34OfficialR_1.ckpt"]; // todo add
-
-	function clientVideoUpdated(e) {
-		const file = e.target.files[0];
-        const megaByteSize = file.size/Math.pow(10, 6);
-        if (getFileExtension(file.name) !== "mp4") {
-            errorText = `Files must be an mp4. (You uploaded a ${getFileExtension(file.name)})`;
-            return;
-        } else if (megaByteSize > MAX_UPLOAD_SIZE_MB) {
-            errorText = `Max file size is ${MAX_UPLOAD_SIZE_MB} MB. (Your file is ${MAX_UPLOAD_SIZE_MB} MB.)`;
-            return;
-        }
-		if (e == undefined) {
-			videoSrc = null;
-			videoName = null;
-		} else {
-			//el.srcObject = file
-			videoSrc = window.URL.createObjectURL(file);
-			videoName = file.name;
-		}
-        errorText = null;
-	}
 
     function submitVideoForm(e) {
         submitting = true;
         submitFormInBackground(e)
             .then(res => {
                 submitting = false;
-                // send up
-                responseText = res.text();
+				if (res.status !== 200) {
+					errorText = `Got a bad response from the server (${res.status})`;
+				} else {
+					// send up
+					serverVideoReadyState = 2;
+					console.log(serverVideoSrc);
+					return res.text();
+				}
             })
+			.then(text => {
+				// Handle text response if needed
+			})
             .catch(err => {
                 submitting = false;
                 errorText = err.message;
@@ -53,17 +42,29 @@
 	const promptPlaceholder = `Make it ${getRandomAdjective()}`;
     let errorText = null;
     let submitting = false;
+    
+	let serverVideoReadyState = 0; // 0 = not started, 1 = processing, 2 = ready
 </script>
 
-<form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 max-w-lg mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit={submitVideoForm}>
-	<label for="video">
-		<span>Input video</span>
-		<input id="video" name="video" type="file" accept="video/mp4" on:change={clientVideoUpdated} required />
-	</label>
-	<!--<span>{promptHint}</span>-->
-	<label for="prompt">
+<form action={uploadURL} method="POST" enctype="multipart/form-data" class="p-10 mx-auto bg-white rounded-xl shadow-lg space-y-4 grid" on:submit|preventDefault={submitVideoForm}>
+	<div class="grid sm:grid-cols-2 justify-center text-center mt-8">
+        <VideoUpload bind:file={videoData} />
+        <div class="m-2 p-2 border-solid border-2 ring-offset-2 border-gray-500">
+            <p>Output</p>
+            {#if serverVideoReadyState === 2}
+                <DownloadButton bind:url={serverVideoSrc} />
+                <VideoPlayer bind:srcURL={serverVideoSrc} type={"mp4"} trashVideo={() => serverVideoReadyState = 0} />
+            {/if}
+        </div>
+    </div>
+    
+    <label for="prompt">
 		<span>Prompt</span>
 		<input id="prompt" name="prompt" type="text" placeholder={promptPlaceholder} />
+	</label>
+	<label for="fps">
+		<span>Output FPS</span>
+		<input id="fps" name="fps" type="number" min="1" bind:value={fps} />
 	</label>
 	<label for="model">
 		<span>Model</span>
@@ -86,9 +87,9 @@
 		</select>
 	</label>
 
-    <input type="submit" value={submitting ? "Processing..." : "Upload"} class="self-center cursor-pointer" disabled={submitting}>
+    <input type="submit" value={submitting ? "Processing..." : "Generate"} class="self-center cursor-pointer" disabled={submitting}>
     {#if errorText != null}
-    <p class="text-red-400">An error occurred: {errorText}</p>
+    <p class="text-red-400 text-center">An error occurred: {errorText}</p>
     {/if}
 </form>
 

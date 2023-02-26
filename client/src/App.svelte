@@ -2,33 +2,25 @@
 	<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </svelte:head>
 <script>
-	import VideoPlayer from "./util/VideoPlayer.svelte";
 	import InputForm from "./util/InputForm.svelte";
-    import Logo from "./Logo.svelte";
-    import { getFileExtension } from "./util/formSubmission";
+    import Logo from "./Logo.svelte"
 
-	let clientVideoSrc = null;
-	let clientVideoName = null;
-	let serverVideoSrc = null; // todo get from form response
-
-	let serverResponse = null;
-	// todo handle changes to serverResponse
-	// parse JSON and update serverVideoSrc
+	// probably not the best way to do this
+	let doLogoAnimation = false;
+	let lastMoveTimeout = setTimeout(() => doLogoAnimation = true, 1000);
+	function resetTimer() {
+		doLogoAnimation = false;
+		clearTimeout(lastMoveTimeout);
+		lastMoveTimeout = setTimeout(() => doLogoAnimation = true, 1000);
+	}
 </script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<Logo />
-<h1 class="text-2xl text-center mt-4 mb-2">AI Video Convertor</h1>
+<div on:mousemove={resetTimer}>
 
-<InputForm bind:videoSrc={clientVideoSrc} bind:responseText={serverResponse} bind:videoName={clientVideoName} />
-
-<div class="grid sm:grid-cols-2 justify-center text-center mt-8">
-	<div>
-		<p>Input</p>
-		<VideoPlayer bind:srcURL={clientVideoSrc} type={getFileExtension(clientVideoName)} />
-	</div>
-	<div>
-		<p>Output</p>
-		<VideoPlayer bind:srcURL={serverVideoSrc} type={"mp4"} />
-	</div>
+	<Logo anim={doLogoAnimation} />
+	<h1 class="text-2xl text-center mt-4 mb-2">AI Video Convertor</h1>
+	
+	<InputForm />
+	
 </div>
