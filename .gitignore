@@ -1,0 +1,6 @@
+client/node_modules/
+client/public/build/
+
+client/.DS_Store
+
+server/uploads/*
