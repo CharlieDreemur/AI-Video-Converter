@@ -2,26 +2,52 @@ import requests
 url = "http://127.0.0.1:7860"
 
 # the defaults if doesn't set anything
-template = {
-    "negative_prompt": "",
-    "data_model": "",
-    "steps": 30,
-    "max_steps": 50,
+setup = {
+    "sd_model_checkpoint": "anything-v4.5-pruned",
+    "fps": 30,
+    "prompt": "best quality, 8K, highres, masterpiece, highly detailed",
+    "negative_prompt": "(worst quality), (bad quality), nsfw",
+    #Sampling
+    "sampler_name": "DPM++ 2M Karras",
+    "steps": 40,
+    "denoising_strength": 0.5,
+    "seed": 114514,
+    "cfg_scale": 12,
+    #image
     "width": 512,
     "height": 512,
-    "guidance_scale": "7.0",
-    "sampler": "Euler a",
-    "style": "None",
-    "facefix": "None",
-    "highres_fix": 'Disabled',
-    "clip_skip": 1,
-    "hypernet": "None",
-    "lora": "None",
-    "strength": "0.75",
-    "batch": "1,1",
-    "max_batch": "1,1",
-    "upscaler_1": "ESRGAN_4x"
+    "restore_faces": False,
+    #controlNet
+    "controlnet_module":'hed',
+    "controlnet_model":'control_hed-fp16 [13fee50b]',
+    
 }
+def setup_match(style, type):
+    if style == "anime":
+        setup["sd_model_checkpoint"] = "anything-v4.5-pruned"
+    if style == "realistic":
+        setup["sd_model_checkpoint"] = "dreamlike-photoreal-2.0"
+        setup["prompt"] += "(photo-realistic),"
+    if style == "3D-anime":
+        setup["sd_model_checkpoint"] = "protogenV22Anime_22"
+    if style == "art":
+        setup["sd_model_checkpoint"] = "dreamlikeDiffusion10_10"
+        setup["prompt"] += "dreamlikeart,"
+    if type == "general":
+        setup["controlnet_module"] = 'hed'
+        setup["controlnet_model"] = 'control_hed-fp16 [13fee50b]'
+    if type == "character":
+        setup["controlnet_module"] = 'canny'
+        setup["controlnet_model"] = 'control_canny-fp16 [e3fe7712]'
+    if type == "building":
+        setup["controlnet_module"] = 'mlsd'
+        setup["controlnet_model"] = 'control_mlsd-fp16 [e3705cfa]'
+    if type == "dance":
+        setup["controlnet_module"] = 'openpose'
+        setup["controlnet_model"] = 'control_openpose-fp16 [9ca67cc5]'
+    
+def add_prompt(prompt):
+    setup["prompt"] += prompt
 
 def get_models_name():
     response = requests.get(url=f'{url}/sdapi/v1/sd-models')
