@@ -1,3 +1,4 @@
+from PIL import Image, PngImagePlugin
 def resize_png(image_path):
     with Image.open(image_path) as im:
         width, height = im.size

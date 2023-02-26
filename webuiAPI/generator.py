@@ -7,7 +7,7 @@ import requests
 import io
 import base64
 from io import BytesIO
-
+import webuiAPI.setting
 
 
 # create API client
@@ -24,6 +24,9 @@ api = webuiapi.WebUIApi(host='127.0.0.1', port=7860)
 
 # optionally set username, password when --api-auth is set on webui.
 api.set_auth('username', 'password')
+
+
+
 
 def txt2img(prompt_in="best quality, masterpiece, highly detailed, photo realisitc, cute, cat", styles_in=[],cfg_scale_in=7, seed_in=-1, sampler_index_in='EularA',step_in=20, denoising_strength_in=0.75):
     result = api.txt2img(prompt=prompt_in,
@@ -44,8 +47,6 @@ def txt2img(prompt_in="best quality, masterpiece, highly detailed, photo realisi
     )
     return result.image
 
-
-url = "http://127.0.0.1:7860"
 #Convert image to base64
 def pil_to_base64(pil_image):
     with BytesIO() as stream:
@@ -53,36 +54,6 @@ def pil_to_base64(pil_image):
         base64_str = str(base64.b64encode(stream.getvalue()), "utf-8")
         return "data:image/png;base64," + base64_str
 
-
-setup = {
-    "prompt": "best quality, masterpiece, 1girl",
-    #"negative_prompt": "",
-    "steps": 30,
-    "denoising_strength": 0.75,
-    #"mask": "string",
-    #"mask_blur": 4,
-    #"inpainting_fill": 0,
-    #"inpaint_full_res": True,
-    #"inpaint_full_res_padding": 0,
-    #"inpainting_mask_invert": 0,
-    #"initial_noise_multiplier": 0,
-    #"styles": ["string"],
-    "seed": -1,
-    "sampler_name": "Euler a",
-    "cfg_scale": 12,
-    "width": 512,
-    "height": 512,
-    #"restore_faces": False,
-    #"tiling": False,
-    #"override_settings": {},
-    #"override_settings_restore_afterwards": True,
-    #"include_init_images": False
-}
-def pil_to_base64(pil_image):
-        with BytesIO() as stream:
-            pil_image.save(stream, "PNG", pnginfo=None)
-            base64_str = str(base64.b64encode(stream.getvalue()), "utf-8")
-            return "data:image/png;base64," + base64_str
         
 def img2img(image, setup):
     #Convert image to base64
@@ -101,19 +72,19 @@ def img2img(image, setup):
 
 def controlNetImg2img(image, setup):
     cn = webuiapi.ControlNetInterface(api)
-    cn.model_list()
-    output = cn.img2img(prompt="best quality, anime, 1girl, batman",
+    output = cn.img2img(prompt= setup['prompt'],
             width=setup['width'],
             height=setup['height'],
             init_images=[image], 
             controlnet_input_image=[image], 
-            controlnet_weight = 1,
-            controlnet_guidance = 1,
-            denoising_strength=0.3,
-            sampler_index="Euler a",
-            cfg_scale=7,
-            controlnet_module='hed',
-            controlnet_model='control_hed-fp16 [13fee50b]',
+            steps= setup['steps'],
+            controlnet_weight = setup['controlnet_weight'],
+            controlnet_guidance = setup['controlnet_guidance'],
+            denoising_strength= setup['denoising_strength'],
+            sampler_index= setup['sampler_name'],
+            cfg_scale= setup['cfg_scale'],
+            controlnet_module= setup['controlnet_module'],
+            controlnet_model= setup['controlnet_model'],
            )
     return output.image
 
@@ -123,6 +94,9 @@ def saveimg(img, path, fileName='output'):
     img.save(path + '/' + fileName + '.png', 'PNG')
 
 if __name__ == '__main__':
-    pil_image = Image.open("D:\StudyLife\Github\HackIllinois\input/input2.png")
-    image = controlNetImg2img(pil_image)
-    saveimg("D:\StudyLife\Github\HackIllinois\output", image)
+    pil_image = Image.open('D:\StudyLife\Github\HackIllinois\input/105661084_p0_master1200.png')
+    webuiAPI.setting.setup_model_match(style="amime")
+    webuiAPI.setting.setup_type_match(type="character")
+    image = controlNetImg2img(pil_image, webuiAPI.setting.setup)
+    print(webuiAPI.setting.setup)
+    saveimg(img = image, path="D:\StudyLife\Github\HackIllinois\output")
