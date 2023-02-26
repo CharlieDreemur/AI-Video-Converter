@@ -2,8 +2,8 @@ from moviepy.editor import VideoFileClip
 import ffmpeg
 from moviepy.editor import VideoFileClip, AudioFileClip
 def extract_audio(input_path, audio_path):
-    clip = VideoFileClip(input_path)
-    audio = clip.audio
+    clip1 = VideoFileClip(input_path)
+    audio = clip1.audio
     audio.write_audiofile(audio_path)
 
 def add_audio_to_video(video_path, audio_path, combined_path):
