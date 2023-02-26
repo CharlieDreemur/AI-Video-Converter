@@ -38,11 +38,9 @@ def video2frame(video_file,framepersec=60):
     if not os.path.isdir(filename):
         os.mkdir(filename)
     # read the video file
-    logging.info("FILEPATH=" + video_file)
     cap = cv2.VideoCapture(video_file)
     if cap.isOpened() == False:
         cap.open(video_file)
-    logging.info("OPEN"+str(cap.isOpened()))
     # get the FPS of the video
     fps = cap.get(cv2.CAP_PROP_FPS)
     # if the SAVING_FRAMES_PER_SECOND is above video FPS, then set it to FPS (as maximum)
@@ -79,6 +77,8 @@ def video2frame(video_file,framepersec=60):
         count += 1
 
 def frame2video(pathIn,pathOut,fps):
+    logging.info(f"pathIn: {pathIn}")
+    logging.info(f"pathOut: {pathOut}")
     frame_array = []
     files = [f for f in os.listdir(pathIn) if isfile(join(pathIn, f))]
     #for sorting the file names properly
@@ -91,6 +91,7 @@ def frame2video(pathIn,pathOut,fps):
         #inserting the frames into an image array
         frame_array.append(img)
     out = cv2.VideoWriter(pathOut,cv2.VideoWriter_fourcc(*'DIVX'), fps, (setup["width"],  setup["height"]))
+    logging.info("HERE TO OUT")
     for i in range(len(frame_array)):
         # writing to a image array
         out.write(frame_array[i])
@@ -104,17 +105,19 @@ def processframes(pathIn, pathOut):
     files.sort(key = lambda x: int(x[5:-4]))
     temp=0
     for i in range(int(len(files))):
+        logging.info("DEAILING WITH FRAME "+str(i))
         filename=pathIn+files[i]
         #reading each files
         img = Image.open(filename)
         height, width = img.width, img.height
-        setup["width"]=width
-        setup["height"]=height
+        setup["width"]=512
+        setup["height"]=512
         print(filename)
         output = webuiAPI.generator.controlNetImg2img(img, setup)
         #inserting the frames into an image array
         webuiAPI.generator.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
         temp+=1
+    logging.info("DEAL FRAME FINISH")
 '''
 if __name__=="__main__":
     import sys

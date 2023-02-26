@@ -59,8 +59,10 @@ def upload_video():
     if not os.path.isdir("outputs"):
         os.mkdir("outputs")
     dirout = "outputs/" + fname[:-4] + "-outimg"
-    frameconverter.processframes(dirin, dirout)
-    frameconverter.frame2video(dirout, app.config['DOWNLOAD_FOLDER'], fps)
+    #frameconverter.processframes(dirin, dirout)
+    if not os.path.isdir(app.config['DOWNLOAD_FOLDER']):
+        os.mkdir(app.config['DOWNLOAD_FOLDER'])
+    frameconverter.frame2video(dirout+"/", app.config['DOWNLOAD_FOLDER']+"/"+fname[:-4]+".mp4", fps)
     return "ok"
 
 @app.route("/dlv", methods=["GET"])
