@@ -9,8 +9,8 @@ setup = {
     "prompt": "best quality, 8K, highres, masterpiece, anime, 1girl, cute, highly detailed",
     "negative_prompt": "(worst quality), (bad quality), nsfw, easynative",
     #Sampling
-    "sampler_name": "Euler a",
-    "steps": 100,
+    "sampling_index": "Euler a",
+    "steps": 40,
     "denoising_strength": 0.5,
     "seed": 114514,
     "cfg_scale": 12,
@@ -36,7 +36,8 @@ def setup_model_match(style):
     if style == "art":
         setup["sd_model_checkpoint"] = "dreamlikeDiffusion10_10"
         setup["prompt"] += "dreamlikeart,"
-
+    set_option(setup)
+    
 def setup_type_match(type):
     if type == "general":
         setup["controlnet_module"] = 'hed'
@@ -50,7 +51,7 @@ def setup_type_match(type):
     if type == "dance":
         setup["controlnet_module"] = 'openpose'
         setup["controlnet_model"] = 'control_openpose-fp16 [9ca67cc5]'
-
+    set_option(setup)
 
 def add_prompt(prompt):
     setup["prompt"] += prompt
@@ -69,9 +70,9 @@ def get_models_name():
 
 
 
-def set_option(sd_model_checkpoint):
+def set_option(setup):
     option_payload = {
-        "sd_model_checkpoint": sd_model_checkpoint,
+        "sd_model_checkpoint": setup["sd_model_checkpoint"],
         #"CLIP_stop_at_last_layers": 2
     }
     url = setup["url"]
