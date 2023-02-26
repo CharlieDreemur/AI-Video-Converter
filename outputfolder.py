@@ -2,7 +2,7 @@ import cv2
 import os
 import datetime
 from os.path import isfile, join
-def main(pathIn):
+def outputfolder(pathIn):
     foldername = "outputfolder"
     path=os.path.join(pathIn,foldername)
     if not os.path.isdir(path):
@@ -22,4 +22,4 @@ def main(pathIn):
 if __name__=="__main__":
     import sys
     pathin=sys.argv[1]
-    main(pathin)
+    outputfolder(pathin)
