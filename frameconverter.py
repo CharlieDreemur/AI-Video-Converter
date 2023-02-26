@@ -30,6 +30,7 @@ def get_saving_frames_durations(cap, saving_fps):
     for i in np.arange(0, clip_duration, 1 / saving_fps):
         s.append(i)
     return s
+
 def video2frame(video_file,framepersec=60):
     SAVING_FRAMES_PER_SECOND = framepersec
     filename, _ = os.path.splitext(video_file)

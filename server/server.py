@@ -44,32 +44,35 @@ def hello():
 @app.route("/upv", methods=["POST"])
 def upload_video():
     app.logger.info("HERE in UPLOAD VIDEO")
-    file = request.files['video']
-    fps = 1 #request.form['fps']
+    fps = int(request.form['fps'])
     prompt = request.form['prompt']
     model = request.form['model']
     samplingMethod = request.form['samplingMethod']
-    filename = file.filename
+    app.logger.info(f"fps: {fps}")
+    app.logger.info(request.form)
+    file = request.files['video']
+    logging.info(f"file: {file}")
+    filename = request.form["fname"]
+    app.logger.info(f"filename: {filename}")
     if not os.path.isdir(app.config['UPLOAD_FOLDER']):
         os.mkdir(app.config['UPLOAD_FOLDER'])
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    fname = filename
+    fname = filename+".mp4"
+    app.logger.info("HERE in UPLOAD VIDEO 0")
     frameconverter.video2frame(os.path.join(app.config['UPLOAD_FOLDER'], fname), fps)
     dirin = os.path.join(app.config['UPLOAD_FOLDER'], fname[:-4] + "-opencv\\")
     if not os.path.isdir("outputs"):
         os.mkdir("outputs")
     dirout = "outputs/" + fname[:-4] + "-outimg"
-    #frameconverter.processframes(dirin, dirout)
+    app.logger.info("HERE in UPLOAD VIDEO 1")
+    frameconverter.processframes(dirin, dirout)
+    app.logger.info("HERE in UPLOAD VIDEO 2")
     if not os.path.isdir(app.config['DOWNLOAD_FOLDER']):
         os.mkdir(app.config['DOWNLOAD_FOLDER'])
+    app.logger.info("HERE in UPLOAD VIDEO 3")
     frameconverter.frame2video(dirout+"/", app.config['DOWNLOAD_FOLDER']+"/"+fname[:-4]+".mp4", fps)
-    return "ok"
-
-@app.route("/dlv", methods=["GET"])
-def download_video():
-    fname = request.args.get('dfn')
-    app.logger.info("HERE in DOWNLOAD VIDEO")
-    return send_from_directory(app.config['DOWNLOAD_FOLDER'], f"{fname}.mp4")
+    app.logger.info("HERE in UPLOAD VIDEO 4")
+    return send_from_directory(app.config['DOWNLOAD_FOLDER'], f"{fname[:-4]}.mp4")
 
 if __name__ == "__main__":
     app.config['UPLOAD_FOLDER'] = 'uploads'
