@@ -5,10 +5,9 @@ export async function submitFormInBackground(e) {
     const ACTION_URL = e.target.action;
 
     const formData = new FormData(e.target);
-
     fetch(ACTION_URL, {
         method: e.target.method,
-        body: e.target.method.toLowerCase() != "get" ? formData : undefined,
+        body: formData,//e.target.method.toLowerCase() != "get" ? formData : undefined,
     })
         .then(res => resolve(res))
         .catch(rej => reject(rej));
