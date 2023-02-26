@@ -1,15 +1,15 @@
 # AI Video Convertor Based on ControlNet
-## Inspiration 
-If 2022 is a milestone of stable diffusion, when delicate AI generated drawings first better than human artists, then in 2023, the birth of ControlNet definitly push AI drawing generation to a new peak. It allows a stable, more controlled way of generate drawings. But is it just for drawing. In recently month, I have seen so much amazing AI Animation with stable diffusion. Those users just cut a video to different frames, render each frame, and put it together into delicate and consistent AI Animation. But can it be more convenient, user-friendly to handle this process? Here, our AI Video Convertor has born.
+## Inspiration:
+In 2022, we witnessed a milestone in the world of AI-generated art, as delicate AI-generated drawings surpassed the skill of human artists. This achievement was followed in 2023 by the birth of ControlNet, which further pushed the boundaries of AI drawing generation by allowing for a stable and more controlled approach to creating drawings. However, AI-generated art isn't just limited to drawings. In recent months, we have seen some incredible AI animations that are both delicate and consistent. These animations are created by cutting a video into individual frames, rendering each frame, and then putting them back together. But we wondered: could this process be made more user-friendly? That's why we created our AI Video Converter.
 
-## What we learn
-During this process, we learn so much about how to use python and javascript api to interact with stable diffusion and controlNet model. We also learn how to run python server such as flaxk and interact with Vue frontend. We learn how to process video such as autoally seperate video to frames and convert it back to video after AI generates. 
+## What we learned:
+Throughout the development process, we learned a lot about how to interact with stable diffusion and ControlNet models using Python and JavaScript APIs. We also gained experience in running Python servers like Flask and interacting with Vue frontend. We learned how to process videos, including automatically separating them into frames and then converting them back into a video after AI generation.
 
-## How we built our project
-We first use trello card to assign tasks and programming architecture flowchart to understand our whole program strucutre. We download all stable diffusion and controlNet model in one computer and test it locally. We also build a local server to support it easily to change to a crowd server. We use web to let users easily convert video in a user-friendly way.
+## How we built our project:
+We started by assigning tasks using Trello cards and creating a programming architecture flowchart to understand the structure of our entire program. We downloaded all the stable diffusion and ControlNet models onto one computer and tested them locally. We also created a local server to make it easier to switch to a crowd server. Finally, we used a web interface to make it easy for users to convert their videos in a user-friendly way.
 
-## Challenge
-Doing this new technology stuffs is such challengeable for our four freshmen, especially the time management. Using Api form ControlNet and test with local server spends us so much time, we have to spend 10 minutes to test one video and waste lots of time debugging. Our team members has to fight without sleep for 24 hours to finish this project.
+## Challenges:
+Developing this cutting-edge technology was a challenging experience for our team of four freshmen, particularly when it came to time management. Testing the API from ControlNet and debugging took a lot of time, with ten minutes required to test a single video. We had to work tirelessly without sleep for 24 hours to complete the project.
 
 
 To run the server, follow the steps below:
