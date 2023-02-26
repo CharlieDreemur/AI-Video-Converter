@@ -140,10 +140,9 @@ def processframes(pathIn, pathOut):
         webuiAPI.generator.saveimg(path=pathOut, img=output, fileName=f"frame{temp}")
         temp+=1
     logging.info("DEAL FRAME FINISH")
-'''
+
 if __name__=="__main__":
     import sys
     #pathin=sys.argv[1]
     #pathout=sys.argv[2]
     processframes('D:\StudyLife\Github\HackIllinois\input\girl-44686_4-opencv/', 'output/')
-'''
