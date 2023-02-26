@@ -15,6 +15,7 @@ We started by assigning tasks using Trello cards and creating a programming arch
 Developing this cutting-edge technology was a challenging experience for our team of four freshmen, particularly when it came to time management. Testing the API from ControlNet and debugging took a lot of time, with ten minutes required to test a single video. We had to work tirelessly without sleep for 24 hours to complete the project.
 
 
+## How to run
 To run the server, follow the steps below:
 1. Install flask and npm files
 ```
