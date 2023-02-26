@@ -1,4 +1,4 @@
-# AIVideoConvertor
+# AI Video Convertor Based on ControlNet
 To run the server, follow the steps below:
 1. Install flask and npm files
 ```
