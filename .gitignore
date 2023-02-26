@@ -7,3 +7,5 @@ server/uploads/*
 
 webuiAPI/output/*
 webuiAPI/input/*
+
+uploads/*

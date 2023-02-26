@@ -2,13 +2,10 @@ from flask import Flask, send_from_directory, request
 import random
 import os
 import logging
-from .. import videotoframe
-from PIL import Image, PngImagePlugin
-from ..webuiAPI import client
+import frameconverter
 import time
 
 logging.basicConfig(level=logging.DEBUG)
-
 app = Flask(__name__, static_folder='../client/public')
 
 class Video(object):
@@ -48,7 +45,7 @@ def hello():
 def upload_video():
     app.logger.info("HERE in UPLOAD VIDEO")
     file = request.files['video']
-    fps = request.form['fps']
+    fps = 1 #request.form['fps']
     prompt = request.form['prompt']
     model = request.form['model']
     samplingMethod = request.form['samplingMethod']
@@ -56,17 +53,14 @@ def upload_video():
     if not os.path.isdir(app.config['UPLOAD_FOLDER']):
         os.mkdir(app.config['UPLOAD_FOLDER'])
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    fname = filename[:-4]
-    fps = request.args.get('fps')
-    videotoframe.video2frame(os.path.join(app.config['UPLOAD_FOLDER'], fname), fps)
-    dirpath = os.path.join(app.config['UPLOAD_FOLDER'], fname + "-opencv")
-    files = os.listdir(dirpath)
-    for file in files:
-        frame = os.path.join(dirpath, file)
-        fimg = Image.open(frame)
-        oimg = client.controlNetImg2img(fimg)
-        client.saveimg("outputs/" + fname + "-outimg", oimg)
-        time.sleep(1)
+    fname = filename
+    frameconverter.video2frame(os.path.join(app.config['UPLOAD_FOLDER'], fname), fps)
+    dirin = os.path.join(app.config['UPLOAD_FOLDER'], fname[:-4] + "-opencv\\")
+    if not os.path.isdir("outputs"):
+        os.mkdir("outputs")
+    dirout = "outputs/" + fname[:-4] + "-outimg"
+    frameconverter.processframes(dirin, dirout)
+    frameconverter.frame2video(dirout, app.config['DOWNLOAD_FOLDER'], fps)
     return "ok"
 
 @app.route("/dlv", methods=["GET"])
@@ -79,3 +73,4 @@ if __name__ == "__main__":
     app.config['UPLOAD_FOLDER'] = 'uploads'
     app.config['DOWNLOAD_FOLDER'] = 'downloads'
     app.run(debug=True)
+    app.logger.info(os.listdir())
