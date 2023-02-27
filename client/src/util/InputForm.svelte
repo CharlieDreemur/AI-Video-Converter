@@ -20,7 +20,9 @@
 
     let fileInput = null;
     function promptUploadFile() {
-        fileInput.click();
+		/*if (file == null) {
+			fileInput.click();
+		}*/
 	}
 	/*
     onMount(() => {
